@@ -1,6 +1,6 @@
 
 <template>
-  <v-container>
+  <v-container v-if="admin">
     <v-row>
       <v-col sm="6" md="3">
           <DataCardVue :data='data1'/>
@@ -66,6 +66,7 @@ export default {
   components:{DataCardVue},
   data() {
       return {
+        admin:false,
         data1:{
           title:'450',
           subtitle:"Employees",
@@ -184,6 +185,15 @@ export default {
       
         return data
     },
+    user(){
+          let u = this.$store.getters['account/getUser'];
+          if(u){
+            if(u.role =='Admin'){
+            this.admin=true
+          }
+          }
+          return u
+        },
   },
 }
 </script>
