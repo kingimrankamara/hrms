@@ -59,7 +59,7 @@ export default {
             leaveType:"",
             description:'',
             leaveTypeOptions: [
-			"Personal Leave","Sick Leave","Emergency Leave", "Maternal Leave","Paternal Leave" 
+			"Personal Leave","Sick Leave","Emergency Leave", "Maternal Leave"
 			],
 
            
