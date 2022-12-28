@@ -68,6 +68,7 @@ export default {
         items: [
           { title: 'Staff List', to:'/staff/list' },
           { title: 'Add Staff', to:'/staff/add' },
+          { title: 'Attendance', to:'/staff/attendances' },
         ],
         title: 'Staffs',
       },
