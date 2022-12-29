@@ -36,7 +36,6 @@
             prepend-icon="mdi-calendar"
             readonly
             v-bind="attrs"
-            v-on="on"
           ></v-combobox>
         </template>
         <v-date-picker
