@@ -1,6 +1,6 @@
 
 <template>
-  <v-container v-if="admin">
+  <v-container v-if="user">
     <v-row>
       <v-col sm="6" md="3">
           <DataCardVue :data='data1'/>
@@ -189,10 +189,10 @@ export default {
           let u = this.$store.getters['account/getUser'];
           if(u){
             if(u.role =='Admin'){
-            this.admin=true
+           return u
           }
           }
-          return u
+          return null
         },
   },
 }
