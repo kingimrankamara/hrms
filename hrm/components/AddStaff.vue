@@ -15,7 +15,10 @@
                         :rules="required"
                         type="file" hidden 
                         @change="preview_image" 
+                        
                         accept='image/x-png,image/gif,image/jpeg'/>
+
+                        
                     <v-btn icon color="primary" @click="chooseFiles">
                         <v-icon>mdi-camera</v-icon>
                     </v-btn>
@@ -335,6 +338,48 @@
                     </v-col>
                 </v-row>
             </v-form>
+
+            <v-snackbar
+                v-model="snackbar"
+                >
+                {{ text }}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                color="pink"
+                text
+                v-bind="attrs"
+                @click="snackbar = false"
+                >
+                Close
+                </v-btn>
+            </template>
+            </v-snackbar>
+
+            <v-dialog
+                v-model="fileDialog"
+                width="400"
+                class="text-center"
+                >
+                <div class="d-flex text-center justify-center transparent" >
+                    <v-btn color="info" small @click="selectImage">Select an image</v-btn> 
+                <v-btn color="primary" class="ml-2" small @click="capturePhoto" > Take a Photo</v-btn>
+                </div>
+            </v-dialog>
+
+            <v-dialog
+                v-model="cameraDialog"
+                width="400"
+                
+                >
+                <v-card class="text-center">
+                    <div class="camera-canvas">
+                        <video ref="camera" width="100%" :height="canvasHeight" autoplay></video>
+                        <canvas v-show="false" id="photoTaken" ref="canvas" :width="canvasWidth" :height="canvasHeight"></canvas>
+                    </div>
+                    <v-btn @click="capture" >Capture <v-icon>mdi-camera</v-icon></v-btn>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -344,6 +389,15 @@ export default {
     components:{DatePicker},
     data() {
         return {
+            isCameraOpen: false,
+            canvasHeight:230,
+            canvasWidth:190,
+            items: [],
+
+            cameraDialog:false,
+            fileDialog:false,
+            snackbar:false,
+            text: `SUCCESS: New staff created`,
             valid:false,
             firstName:"",
             lastName:"",
@@ -440,8 +494,63 @@ export default {
             this.dob =value
         },
         chooseFiles: function() {
-            document.getElementById("fileUpload").click()
+            this.fileDialog=true
         },
+        selectImage(){
+            document.getElementById("fileUpload").click()
+            this.fileDialog=false;
+        },
+        capturePhoto(){
+            this.cameraDialog=true;
+            this.fileDialog=false;
+            this.startCameraStream();
+        },
+        startCameraStream() {
+            const constraints = (window.constraints = {
+                audio: false,
+                video: true
+            });
+            navigator.mediaDevices
+                .getUserMedia(constraints)
+                .then(stream => {
+                    this.$refs.camera.srcObject = stream;
+                }).catch(error => {
+                alert("Browser doesn't support or there is some errors." + error);
+            });
+        },
+        stopCameraStream() {
+            let tracks = this.$refs.camera.srcObject.getTracks();
+            tracks.forEach(track => {
+                track.stop();
+            });
+        },
+        capture() {
+            const FLASH_TIMEOUT = 50;
+            let self = this;
+            setTimeout(() => {
+                const context = self.$refs.canvas.getContext('2d');
+                context.drawImage(self.$refs.camera, 0, 0, self.canvasWidth, self.canvasHeight);
+                const dataUrl = self.$refs.canvas.toDataURL("image/jpeg")
+                    .replace("image/jpeg", "image/octet-stream");
+                self.stopCameraStream();
+                
+                this.cameraDialog=false;
+                this.image = this.dataURLtoFile(dataUrl, 'pp'+'.jpg');
+                this.preview= dataUrl//URL.createObjectURL(this.image);
+            }, FLASH_TIMEOUT);
+    },
+    dataURLtoFile(dataURL, filename) {
+      let arr = dataURL.split(','),
+          mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]),
+          n = bstr.length,
+          u8arr = new Uint8Array(n);
+ 
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, {type: mime});
+    },
         preview_image() {  
             if(this.image != null){
                 this.preview= URL.createObjectURL(this.image)
@@ -541,9 +650,18 @@ export default {
                 this.dob=null;
                 this.dateStarted=null;
                 this.preview='/placeholder.jpg';
+                this.snackbar=true;
             }
         }
     },
 
 }
 </script>
+<style>
+    .camera-canvas{
+        display:flex;
+        align-items: center;
+        justify-content: center;
+
+    }
+</style>
