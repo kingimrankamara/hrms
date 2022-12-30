@@ -250,7 +250,7 @@
         showDatePicker: false,
         mode: 'hsla',
         modes: ['hsla', 'rgba', 'hexa'],
-        message: '',
+        msg: '',
         user: null
       }),
       computed: {
@@ -287,7 +287,7 @@
           return ''
         },
         message () {
-          return this.message
+          return this.msg
         },
         monthFormatter () {
           return this.$refs.calendar.getFormatter({
@@ -347,12 +347,12 @@
             } else {
               this.dialog = true
               this.alert = true
-              this.message = 'Event date cant be in the past'
+              this.msg = 'Event date cant be in the past'
             }
           } else {
             this.dialog = true
             this.alert = true
-            this.message = 'Please Enter event Name starting and Ending date'
+            this.msg = 'Please Enter event Name starting and Ending date'
           }
         },
         getEventColor (ev) {

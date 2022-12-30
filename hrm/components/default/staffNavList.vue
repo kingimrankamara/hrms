@@ -30,6 +30,12 @@
           <v-list-item-title>Attendance</v-list-item-title>
         </v-list-item>
 
+        <v-list-item to="/leave/request">
+          <v-list-item-icon>
+            <v-icon>mdi-view-dashboard</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Request Leave</v-list-item-title>
+        </v-list-item>
         <v-list-item :to="'/leave/requests/'+user._id">
           <v-list-item-icon>
             <v-icon>mdi-view-dashboard</v-icon>
