@@ -41,6 +41,23 @@
                    </v-form>
                 </v-col>
             </v-row>
+
+            <v-snackbar
+                v-model="snackbar"
+                >
+                {{ text }}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                color="pink"
+                text
+                v-bind="attrs"
+                @click="snackbar = false"
+                >
+                Close
+                </v-btn>
+            </template>
+            </v-snackbar>
         </v-container>
     </div>
 </template>
@@ -51,6 +68,8 @@ export default {
     components:{DatePicker},
     data() {
         return {
+            snackbar:false,
+            text: `SUCCESS: Leave request submited`,
             endDate:'End Date',
             valid:false,
             startDateLabel:"Start Date",
@@ -115,6 +134,7 @@ export default {
             if(val){
                 this.$store.dispatch("settings/setRedirect",false)
                 this.$refs.form.reset()
+                this.snackbar=true
             }
         }
     },
