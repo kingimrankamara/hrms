@@ -4,6 +4,9 @@
     --secondary:#5299D3;
 }
 
+.transparent{
+    background-color: transparent;
+}
 .cap{
     text-transform: capitalize;
 }

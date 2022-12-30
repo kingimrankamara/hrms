@@ -54,7 +54,7 @@
 
       <template v-slot:item.actions="{item}">
          <div>
-          <v-switch color="error">
+          <v-switch color="success">
 
           </v-switch>
          </div>

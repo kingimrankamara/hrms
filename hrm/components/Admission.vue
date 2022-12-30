@@ -257,6 +257,8 @@
                     </v-col>
                 </v-row>
             </v-form>
+
+           
         </v-container>
     </div>
 </template>
@@ -267,6 +269,8 @@ export default {
     components:{DatePicker},
     data() {
         return {
+            snackbar:false,
+            text: `SUCCESS: New staff created`,
             firstName:"",
             lastName:"",
             middleName:"",
