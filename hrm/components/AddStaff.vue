@@ -380,6 +380,16 @@
                     <v-btn @click="capture" >Capture <v-icon>mdi-camera</v-icon></v-btn>
                 </v-card>
             </v-dialog>
+
+            <v-dialog
+                v-model="staffDetailsDialog"
+                width="400"
+                
+                >
+                <v-card class="text-center">
+                   <h1>Please write down staff credentials before closing this dialog</h1> 
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -389,6 +399,7 @@ export default {
     components:{DatePicker},
     data() {
         return {
+            staffDetailsDialog:false,
             isCameraOpen: false,
             canvasHeight:230,
             canvasWidth:190,
@@ -454,7 +465,7 @@ export default {
             e2phone:"",
             e2email:"",
             e2address:"",
-
+            generatedPassword:'',
             required: [
             v => !!v || 'This field is required',
             ],
@@ -484,7 +495,10 @@ export default {
         },
         user(){
             return this.$store.getters['account/getUser']
-        }
+        },
+        staff(){
+            return this.$store.getters['management/getStaff'];
+        },
     },
     methods:{
         getdate(value){
@@ -551,25 +565,59 @@ export default {
       }
       return new File([u8arr], filename, {type: mime});
     },
-        preview_image() {  
-            if(this.image != null){
-                this.preview= URL.createObjectURL(this.image)
-                this.createImage(this.image);
-            }
-        },
-        createImage(file) {  
-        if (file !== undefined) {
-            const fileName = file.name
-            if (fileName.lastIndexOf('.') <= 0) {
-            alert('please choose avalid file')
-            }
-            const fileReader = new FileReader()
-            fileReader.addEventListener('load', () => {
-            this.profile = fileReader.result
-            })
-            fileReader.readAsDataURL(file)
-            }
-        },
+    preview_image() {  
+        if(this.image != null){
+            this.preview= URL.createObjectURL(this.image)
+            this.createImage(this.image);
+        }
+    },
+    createImage(file) {  
+    if (file !== undefined) {
+        const fileName = file.name
+        if (fileName.lastIndexOf('.') <= 0) {
+        alert('please choose avalid file')
+        }
+        const fileReader = new FileReader()
+        fileReader.addEventListener('load', () => {
+        this.profile = fileReader.result
+        })
+        fileReader.readAsDataURL(file)
+        }
+    },
+    generatePassword() {
+        // Generate a random number between 0 and 1
+        let r = Math.random();
+
+        // Use the random number to determine the length of the password
+        let passwordLength = 7;
+        if (r > 0.5) {
+            passwordLength = 8;
+        }
+
+        // Generate a random number with the desired length
+        let password = Math.floor(Math.random() * Math.pow(10, passwordLength)) + Math.pow(10, passwordLength - 1);
+
+        // Convert the number to a string
+        password = password.toString();
+
+        // Get a random uppercase letter
+        let uppercaseLetter = String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+
+        // Get a random lowercase letter
+        let lowercaseLetter = String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+
+        // Get a random symbol
+        let symbols = '!@#$%^&*()_+-=[]{}|;:\'",.<>/?';
+        let symbol = symbols[Math.floor(Math.random() * symbols.length)];
+
+        // Add the uppercase letter, lowercase letter, and symbol to the password
+        password += uppercaseLetter + lowercaseLetter + symbol;
+
+        // Return the password
+        this.generatedPassword =password;
+        return password;
+    },
+
     save(){
         this.$refs.form.validate()
 
@@ -589,7 +637,7 @@ export default {
           }
           let formData=(convertToFormData({pp:this.image}))  
         if(this.valid & this.dob !=null & this.image != null){
-
+            let password =generatePassword();
             let data={
 				firstName:this.firstName,
 				lastName: this.lastName,
@@ -598,6 +646,7 @@ export default {
 				dob:this.dob,
 				phone:this.phone,
                 email:this.email,
+                password:password,
 
                 gender:this.gender,
                 bloodGroup:this.bloodGroup,
@@ -651,6 +700,7 @@ export default {
                 this.dateStarted=null;
                 this.preview='/placeholder.jpg';
                 this.snackbar=true;
+                this.staffDetailsDialog=true;
             }
         }
     },
