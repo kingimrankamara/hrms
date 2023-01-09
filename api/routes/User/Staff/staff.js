@@ -22,15 +22,15 @@ router.route("/create")
       role:joi.string().required(),
       emergencyContact:joi.any().required(),
       gender:joi.string().required(),
+      password:joi.string().required(),
       grade:joi.any().required(),
     }).unknown();
 
     const { error, value } = regSchema.validate(req.body);
     if (error) return res.status(401).json(error);
 
-    let password ="123456789"
     const salt = await bcrypt.genSalt(10);
-    const hashePasswod = await bcrypt.hash(password, salt);
+    const hashePasswod = await bcrypt.hash(req.body.password, salt);
     req.body.password=hashePasswod;
     req.body.staffId = req.uuid;
     let staff = new Staff(req.body);
