@@ -388,6 +388,7 @@
                 >
                 <v-card class="text-center">
                    <h1>Please write down staff credentials before closing this dialog</h1> 
+                   <h3>{{ generatedPassword }}</h3>
                 </v-card>
             </v-dialog>
         </v-container>
@@ -637,7 +638,7 @@ export default {
           }
           let formData=(convertToFormData({pp:this.image}))  
         if(this.valid & this.dob !=null & this.image != null){
-            let password =generatePassword();
+            let password =this.generatePassword();
             let data={
 				firstName:this.firstName,
 				lastName: this.lastName,

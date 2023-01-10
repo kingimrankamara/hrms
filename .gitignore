@@ -45,6 +45,9 @@ jspm_packages/
 
 hrm/node_modules/
 api/node_modules/
+
+api/uploads/
+
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
