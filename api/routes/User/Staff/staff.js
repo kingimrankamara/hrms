@@ -13,8 +13,8 @@ router.route("/create")
 }).post(allowCors.corsWithOptions,GenerateId, async (req, res) => {
   try {
     const regSchema = joi.object({
-      firstName: joi.string().min(3).required(),
-      lastName: joi.string().min(3).required(),
+      firstName: joi.string().required(),
+      lastName: joi.string().required(),
       email: joi.string(),
       phone: joi.string(),
       dateStarted: joi.string().required(),

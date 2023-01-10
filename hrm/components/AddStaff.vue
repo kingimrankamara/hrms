@@ -1,6 +1,7 @@
 <template>
     <div>
         <v-container>
+           
             <v-form ref="form" v-model="valid">
                 <v-row>
                     <v-col cols="12" sm="4" md="3">
@@ -384,12 +385,21 @@
             <v-dialog
                 v-model="staffDetailsDialog"
                 width="400"
+                persistent
                 
                 >
                 <v-card class="text-center">
-                   <h1>Please write down staff credentials before closing this dialog</h1> 
-                   <h3>{{ generatedPassword }}</h3>
+                   <p>Please write down staff credentials before closing this dialog</p> 
+                   <ul v-if="staff">
+                        <li>Name: {{ staff.lastName }}  
+                            <span v-if="staff.middleName">{{ staff.middleName }}</span> {{ staff.firstName }}</li>
+                        <li>StaffId: {{ staff.staffId }}</li>
+                        <li color="primary">Password: {{ staff.generatedPassword }}</li>
+                   </ul>
                 </v-card>
+                <v-card-actions>
+                    <v-btn color="error" @click="staffDetailsDialog !=staffDetailsDialog">Close</v-btn>
+                </v-card-actions>
             </v-dialog>
         </v-container>
     </div>
@@ -498,7 +508,11 @@ export default {
             return this.$store.getters['account/getUser']
         },
         staff(){
-            return this.$store.getters['management/getStaff'];
+            let s= this.$store.getters['management/getStaff'];
+            if(s){
+                return s[s.length-1];
+            }
+            return []
         },
     },
     methods:{
