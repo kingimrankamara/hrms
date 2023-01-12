@@ -19,6 +19,8 @@ var ppUpload = require('./routes/User/Staff/ppUpload');
 var Events = require('./routes/events');
 var departmentsCRUD = require('./routes/Management/departments/departments');
 var leaveCRUD = require('./routes/Management/Leave');
+var ResetPassword = require('./routes/auth/staffForgetPassword');
+
 
 
 //auth
@@ -62,6 +64,9 @@ app.use("/api/department/",departmentsCRUD);
 
   app.use("/api/events/",Events);
   app.use("/api/leave/",leaveCRUD);
+
+  app.use("/api/resetpassword/",ResetPassword);
+
 
 
 //auth

@@ -28,7 +28,7 @@ router
   let payloadData={
       to:req.body.email,
       subject:"Reset Password",
-      content:"Hi we required a request to reset your password, please use this code to reset your password "+resetCode
+      content:"Hi we received a request to reset your password, please use this code to reset your password "+resetCode
   }
   mailSender(payloadData);//nodemailer middleware
   
