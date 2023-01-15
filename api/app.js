@@ -13,22 +13,19 @@ const CreateFirstAdmin=require("./MiddleWares/createAdmin");
 
 var companySetup = require('./routes/Management/company');
 
-
 var staffCRUD = require('./routes/User/Staff/staff');
 var ppUpload = require('./routes/User/Staff/ppUpload');
 
-var Trainings = require('./routes/trainings');
+var Events = require('./routes/events');
 var departmentsCRUD = require('./routes/Management/departments/departments');
 var leaveCRUD = require('./routes/Management/Leave');
+var ResetPassword = require('./routes/auth/staffForgetPassword');
+
 
 
 //auth
 var staffLogin = require('./routes/auth/staffLogin');
 var verifyStaff = require('./routes/User/verify/staff');
-
-
-//calender events and time table
-var event = require('./routes/Management/calenderAndEvent/events');
 
 
 //create admin on first startup
@@ -56,28 +53,25 @@ app.use('/uploads/coverImages',express.static(path.join(__dirname, 'uploads')));
 app.use('/testupload',express.static(path.join(__dirname, 'uploads')));
 app.use('/testupload/coverImages',express.static(path.join(__dirname, 'uploads')));
 
-app.use("/api/company/",companySetup);
 
-app.use("/api/staff/",staffCRUD);
-app.use("/api/trainings/",Trainings);
+//setup
+app.use("/api/company/",companySetup);
 app.use("/api/department/",departmentsCRUD);
 
-app.use("/api/leave/",leaveCRUD);
+//unpoding & Staff Management
+  app.use("/api/staff/",staffCRUD);
+  app.use("/api/pp/",ppUpload);
 
+  app.use("/api/events/",Events);
+  app.use("/api/leave/",leaveCRUD);
 
-app.use("/api/pp/",ppUpload);
-
-
-app.use("/api/event/",event);
+  app.use("/api/resetpassword/",ResetPassword);
 
 
 
 //auth
 app.use("/api/auth/staff/",staffLogin);
-
 app.use("/api/staff/verify",verifyStaff);
-
-
 
 mongoose
   .connect(

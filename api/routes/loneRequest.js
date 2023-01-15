@@ -1,36 +1,35 @@
 const express = require("express");
-const joi = require("joi");
-const allowCors = require("../../../MiddleWares/AllowCors");
+const Joi = require("joi");
+const allowCors = require("../MiddleWares/AllowCors");
 const router = express.Router();
-const TimeTable = require("../../../Modules/calenderAndEvents/timeTable");
+const LoneRequest = require("../Modules/LoneRequest");
 
 
-router.route("/create")
+router.route("/request")
 .options(allowCors.corsWithOptions, (req, res) => {
   res.sendStatus(200);
 }).post(allowCors.corsWithOptions, async (req, res) => {
   try {
-    const regSchema = joi.object({
-      academicYear: joi.string().min(3).required(),
-      weeks: joi.any().required(),
-      tearm: joi.string().required(),
-      grade:joi.any().required(),
-      teacher:joi.any().required(),
-      subject: joi.any().required()
-    })
+   
 
-    const { error, value } = regSchema.validate(req.body);
+    const loanSchema = Joi.object({
+        requestedBy: Joi.object().required(),
+        amount: Joi.number().required(),
+        message: Joi.string().required(),
+      });
+
+    const { error, value } = loanSchema.validate(req.body);
     if (error) return res.status(401).json(error);
     
-    let timetable = new TimeTable(req.body);
+    let loneRequest = new LoneRequest(req.body);
 
-    timetable.save()
+    loneRequest.save()
       .then((data) => {
-        res.status(200).json({ data, message: "timetable created" });
+        res.status(200).json( data);
     })
     .catch((err) => {
-        console.log("user not saved");
-        res.status(400).json({ message: err, detail: "Unable to save timetable" });
+        console.log("LoneRequest not saved");
+        res.status(400).json({ message: err, detail: "Unable to save LoneRequest" });
     });
   } catch (err) {
     console.log(err.message);
@@ -38,17 +37,16 @@ router.route("/create")
 });
 
 
-//get all timetable
+//get all LoneRequest
 router
-.route("/getTimetable")
+.route("/getLoneRequests")
 .options(allowCors.corsWithOptions, (req, res) => {
   res.sendStatus(200);
 })
 .get(allowCors.corsWithOptions, async (req, res) => {
   try {
-   let timetable = await TimeTable.find().populate({path:"subject"})
-   .populate({path:"grade"}).populate({path:"teacher"})
-    res.status(200).json(timetable)
+   let loneRequest = await LoneRequest.find().populate('employeeId');
+    res.status(200).json(loneRequest)
   }catch(error){
      res.json(error)
   }
@@ -64,17 +62,17 @@ router
 .get(allowCors.corsWithOptions, async (req, res) => {
   try {
     const id = req.params.id;
-   let timetable = await TimeTable.findById(id)
+   let loneRequest = await LoneRequest.findById(id).populate("employeeId")
    //teachers here
-   res.status(200).json(timetable)
+   res.status(200).json(loneRequest)
   }catch(error){
      res.json(error)
   }
 });
 
 
-//update timetable data
-//update timetable
+//update LoneRequest data
+//update LoneRequest
 router
 .route("/update/:id")
 .options(allowCors.corsWithOptions, (req, res) => {
@@ -83,7 +81,7 @@ router
 .post(allowCors.corsWithOptions, async (req, res) => {
   try {
     const uid = req.params.id
-    TimeTable.findByIdAndUpdate(uid,req.body, function(err, resp){
+    LoneRequest.findByIdAndUpdate(uid,req.body, function(err, resp){
       if(err){
         res.json(err.message);
       }

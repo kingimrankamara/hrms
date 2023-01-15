@@ -1,34 +1,38 @@
 const express = require("express");
-const joi = require("joi");
-const allowCors = require("../../../MiddleWares/AllowCors");
+const Joi = require("joi");
+const allowCors = require("../MiddleWares/AllowCors");
 const router = express.Router();
-const Events = require("../../../Modules/calenderAndEvents/event");
+const Lone = require("../Modules/Lone");
 
 
-router.route("/create")
+router.route("/give")
 .options(allowCors.corsWithOptions, (req, res) => {
   res.sendStatus(200);
 }).post(allowCors.corsWithOptions, async (req, res) => {
   try {
-    const regSchema = joi.object({
-      name: joi.string().min(3).required(),
-      dueDate: joi.string(),
-      amount:joi.number().required(),
-      description: joi.string()
-    })
+   
 
-    const { error, value } = regSchema.validate(req.body);
+    const loanSchema = Joi.object({
+        employeeId: Joi.object().required(),
+        amount: Joi.number().required(),
+        terms: Joi.string().required(),
+        isPaid: Joi.boolean().default(false),
+        paymentDueDate: Joi.date().required(),
+        paymentAmount: Joi.number().required()
+      }).unknown();
+
+    const { error, value } = loanSchema.validate(req.body);
     if (error) return res.status(401).json(error);
     
-    let event = new Events(req.body);
+    let lone = new Lone(req.body);
 
-    event.save()
+    lone.save()
       .then((data) => {
-        res.status(200).json({ data, message: "event created" });
+        res.status(200).json( data);
     })
     .catch((err) => {
-        console.log("user not saved");
-        res.status(400).json({ message: err, detail: "Unable to save event" });
+        console.log("Lone not saved");
+        res.status(400).json({ message: err, detail: "Unable to save lone" });
     });
   } catch (err) {
     console.log(err.message);
@@ -36,16 +40,16 @@ router.route("/create")
 });
 
 
-//get all event
+//get all lone
 router
-.route("/getEvemts")
+.route("/getlones")
 .options(allowCors.corsWithOptions, (req, res) => {
   res.sendStatus(200);
 })
 .get(allowCors.corsWithOptions, async (req, res) => {
   try {
-   let event = await Events.find();
-    res.status(200).json(event)
+   let lone = await Lone.find().populate('employeeId');
+    res.status(200).json(lone)
   }catch(error){
      res.json(error)
   }
@@ -61,17 +65,17 @@ router
 .get(allowCors.corsWithOptions, async (req, res) => {
   try {
     const id = req.params.id;
-   let event = await Events.findById(id)
+   let lone = await Lone.findById(id).populate("employeeId")
    //teachers here
-   res.status(200).json(event)
+   res.status(200).json(lone)
   }catch(error){
      res.json(error)
   }
 });
 
 
-//update event data
-//update event
+//update lone data
+//update lone
 router
 .route("/update/:id")
 .options(allowCors.corsWithOptions, (req, res) => {
@@ -80,7 +84,7 @@ router
 .post(allowCors.corsWithOptions, async (req, res) => {
   try {
     const uid = req.params.id
-    Events.findByIdAndUpdate(uid,req.body, function(err, resp){
+    Lone.findByIdAndUpdate(uid,req.body, function(err, resp){
       if(err){
         res.json(err.message);
       }
