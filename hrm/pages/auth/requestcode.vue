@@ -16,7 +16,11 @@
                         </div>
                         <v-col cols="12" sm="6" class="primary-bg light h-100vh">
                            <div class="center mt-5">
-                            <h1>{{title}}</h1>                            
+                            <h1>{{title}}</h1>
+                            <p class="p-18 pa-5">
+                                A 7 digit Auth code will be sent to the 
+                                email address coneected to the staffID
+                            </p>                            
                            </div>
                         </v-col>
                         <v-col cols="12" sm="6">
@@ -24,22 +28,13 @@
                                 <v-text-field
                                     class="text-uppercase"
                                     v-model="staffId"
-                                    
                                     label="Staf ID"
                                     outlined
                                     dense
                                 ></v-text-field>
-                                <v-text-field
-                                    class="text-uppercase"
-                                    v-model="password"
-                                    
-                                    label="Password"
-                                    outlined
-                                    dense
-                                ></v-text-field>
-
+                                
                                 <v-btn color="primary" dense @click="login" >
-                                    Login <v-icon class="ml-3">mdi-account</v-icon>
+                                    Request Code <v-icon class="ml-3">mdi-account</v-icon>
                                 </v-btn>
                             </v-form>
                         </v-col>
@@ -58,8 +53,7 @@ export default {
         return {
             staffId:null,
             password:null,
-            title:"Login",
-            loginType:'Staff Login'
+            title:"Request Auth Code",
         }
     },
     computed: {
@@ -80,7 +74,7 @@ export default {
     watch: {
 		user(val){
 			if(val){
-				this.$router.push('/') 
+				//this.$router.push('/') 
 			}
 			
 		}

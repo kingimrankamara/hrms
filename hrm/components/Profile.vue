@@ -45,8 +45,8 @@
                                         <v-col cols="12" md="6" > 
                                             <span class="success--text">Role: </span>{{user.jobTitle}}
                                         </v-col>
-                                        <v-col cols="12"  md="6"> 
-                                            <span class="success--text">Department: </span>{{user.department.name}}
+                                        <v-col cols="12"  md="6" v-if="user.department"> 
+                                            <span class="success--text" >Department: </span>{{user.department.name}}
                                         </v-col>
                                         
                                        

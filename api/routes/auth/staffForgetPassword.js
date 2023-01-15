@@ -30,19 +30,19 @@ router
       subject:"Reset Password",
       content:"Hi we received a request to reset your password, please use this code to reset your password "+resetCode
   }
-  console.log(payloadData)
-  mailSender(payloadData);//nodemailer middleware
+   console.log(payloadData)
+   mailSender(payloadData);//nodemailer middleware
   
    user.resetPassword = {
       code:resetCode
     }
-  user.save().then(()=>{
+   user.save().then(()=>{
      
-  }).catch(err=()=>{
+   }).catch(err=()=>{
       console.log('unable to send email')
       res.status(400).send(err);
-  })
-  res.status(200).json(user.email);
+   })
+   res.status(200).json(user.email);
 }catch(err){
   console.log(err);
 }

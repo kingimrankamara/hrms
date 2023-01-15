@@ -16,30 +16,31 @@
                         </div>
                         <v-col cols="12" sm="6" class="primary-bg light h-100vh">
                            <div class="center mt-5">
-                            <h1>{{title}}</h1>                            
+                            <h1>{{title}}</h1>
+                                                      
                            </div>
                         </v-col>
                         <v-col cols="12" sm="6">
                             <v-form>
                                 <v-text-field
                                     class="text-uppercase"
-                                    v-model="staffId"
-                                    
-                                    label="Staf ID"
+                                    v-model="password"
+                                    label="New Password"
+                                    :rules="passwordRules"
                                     outlined
                                     dense
                                 ></v-text-field>
                                 <v-text-field
                                     class="text-uppercase"
-                                    v-model="password"
-                                    
-                                    label="Password"
+                                    v-model="repassword"
+                                    label="Repeat Password"
                                     outlined
+                                    :rules="resetPassword"
                                     dense
                                 ></v-text-field>
-
+                                
                                 <v-btn color="primary" dense @click="login" >
-                                    Login <v-icon class="ml-3">mdi-account</v-icon>
+                                    Reset  <v-icon class="ml-3">mdi-password</v-icon>
                                 </v-btn>
                             </v-form>
                         </v-col>
@@ -56,10 +57,17 @@
 export default {
     data() {
         return {
-            staffId:null,
+            repassword:null,
             password:null,
-            title:"Login",
-            loginType:'Staff Login'
+            title:"Reset Password",
+            passwordRules: [
+                v => !!v || 'New Password is required',
+                v => /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{7,}$/.test(v) || 'password shound not be less than 7 characters and must include atlist one digit, Uppercase and lowercase character',
+            ],
+            resetPassword:[
+                v => !!v || 'Repeat Password is required',
+                v => v == this.password || 'Passwords do not match'
+            ]
         }
     },
     computed: {
@@ -80,7 +88,7 @@ export default {
     watch: {
 		user(val){
 			if(val){
-				this.$router.push('/') 
+				//this.$router.push('/') 
 			}
 			
 		}
