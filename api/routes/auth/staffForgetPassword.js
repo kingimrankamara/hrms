@@ -103,13 +103,13 @@ router
 
   //chek if user exist
   const uid = req.user.uid
-  let staff = await Staff.findById(uid)
-  if (!staff) return res.status(401).json({error:error, message:'Errr: User not found'})
-
-  //save new password
-   res.status(200).json("done")
+  const salt = await bcrypt.genSalt(10);
+  const hashePasswod = await bcrypt.hash(req.body.password, salt);
+  let staff = await Staff.findByIdAndUpdate(uid,{password:hashePasswod})
+  if(!staff) return res.status(400).json({message:'User not found'})
   
-   
+   res.status(200).json("Done: Passworrd updated")
+  
 }catch(err){
   console.log(err.message);
 }
