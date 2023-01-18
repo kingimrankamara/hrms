@@ -28,6 +28,8 @@
                                     label="New Password"
                                     :rules="passwordRules"
                                     outlined
+                                    type="password"
+                                    @change="setUndefine"
                                     dense
                                 ></v-text-field>
                                 <v-text-field
@@ -37,9 +39,11 @@
                                     outlined
                                     :rules="resetPassword"
                                     dense
+                                    type="password"
+                                    @change="setUndefine"
                                 ></v-text-field>
                                 
-                                <v-btn color="primary" dense @click="login" >
+                                <v-btn color="primary" dense @click="login" :disabled="disabled">
                                     Reset  <v-icon class="ml-3">mdi-password</v-icon>
                                 </v-btn>
                             </v-form>
@@ -47,6 +51,7 @@
                     </v-row>
                         </v-card-text>
                 </v-card>
+                
                 </v-col>
                 </v-row>
        
@@ -57,6 +62,7 @@
 export default {
     data() {
         return {
+            disabled:true,
             repassword:null,
             password:null,
             title:"Reset Password",
@@ -83,6 +89,13 @@ export default {
             password:this.password
             }
             this.$store.dispatch("account/staffLogin",data);
+        },
+        setUndefine(){
+            console.log("key up")
+            if(this.password == this.repassword){
+                this.disabled = false;
+            }
+            else this.disabled = true;
         }
     },
     watch: {

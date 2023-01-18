@@ -2,11 +2,13 @@
 const express = require("express");
 const router = express.Router();
 
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const allowCors = require("../../MiddleWares/AllowCors");
 const joi = require("joi");
 const Staff = require("../../Modules/Users/staff");
 const mailSender =require("../../MiddleWares/sendMail");
-
+const VerifyUser =require("../../MiddleWares/VerifyUser")
 router
   .route("/")
   .options(allowCors.corsWithOptions, (req, res) => {
@@ -31,7 +33,7 @@ router
       content:"Hi we received a request to reset your password, please use this code to reset your password "+resetCode
   }
    console.log(payloadData)
-   mailSender(payloadData);//nodemailer middleware
+   //mailSender(payloadData);//nodemailer middleware
   
    user.resetPassword = {
       code:resetCode
@@ -45,6 +47,71 @@ router
    res.status(200).json(user.email);
 }catch(err){
   console.log(err);
+}
+})
+
+
+router
+  .route("/verifyCode")
+  .options(allowCors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+  })
+  .post(allowCors.corsWithOptions, async (req, res) => {
+  try{
+  const codeSchema =joi.object({
+      code:joi.string().required(),
+      staffId:joi.string().required(),
+  });
+  const {error} = codeSchema.validate(req.body)
+  if (error) res.status(401).json({error:error, message:'Invalid verification code'})
+
+  //chek if user exist
+  const staff = await Staff.findOne({staffId:req.body.staffId})
+  if (!staff) return res.status(401).json({error:error, message:'Errr: User not found'})
+
+  //verify code
+  let code = staff.resetPassword.code
+  if(code !== req.body.code) return res.json(400).json({message:'Invalid verification code'});
+
+  //generate token
+  const token = jwt.sign({ uid: staff._id }, "procdesssenvTECRET", {
+    expiresIn: "420s",//7 minute 
+  });
+   res.status(200).json(token)
+  
+   
+}catch(err){
+  console.log(err.message);
+}
+})
+
+
+
+router
+  .route("/newPassword")
+  .options(allowCors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+  })
+  .post(allowCors.corsWithOptions,VerifyUser, async (req, res) => {
+  try{
+  const codeSchema =joi.object({
+      password:joi.string().required(),
+      rePassword:joi.string().required(),
+  });
+  const {error} = codeSchema.validate(req.body)
+  if (error) res.status(401).json({error:error, message:'Invalid verification code'})
+
+  //chek if user exist
+  const uid = req.user.uid
+  let staff = await Staff.findById(uid)
+  if (!staff) return res.status(401).json({error:error, message:'Errr: User not found'})
+
+  //save new password
+   res.status(200).json("done")
+  
+   
+}catch(err){
+  console.log(err.message);
 }
 })
 
