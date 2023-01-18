@@ -43,31 +43,6 @@
           <v-list-item-title>My Leave Requests</v-list-item-title>
         </v-list-item>
  
-
-        <v-list-group
-            v-for="item in items"
-            :key="item.title"
-            v-model="item.active"
-            :prepend-icon="item.action"
-            no-action
-            class:prependIcon="primary"
-          >
-              <template v-slot:activator>
-                <v-list-item-content>
-                  <v-list-item-title v-text="item.title"></v-list-item-title>
-                </v-list-item-content>
-              </template>
-
-              <v-list-item
-                v-for="child in item.items"
-                :key="child.title"
-                :to="child.to"
-              >
-                <v-list-item-content>
-                  <v-list-item-title v-text="child.title"></v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-group>
      
     </v-list>
     </div>
@@ -86,17 +61,6 @@
           title: 'Profile', to:'/staff/profile',icon:'mdi-person'
         }
       ],
-
-      items:[
-      {
-        action: 'mdi-money',
-        items: [
-          { title: 'Request Lone', to:'/lone/request' },
-          { title: 'Lones', to:'/lone/requests' },
-        ],
-        title: 'Lone',
-      },
-      ]
       
      
     }),

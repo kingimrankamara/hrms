@@ -4,7 +4,7 @@ const router = express.Router();
 
 const allowCors = require("../../MiddleWares/AllowCors");
 const joi = require("joi");
-const Staff = require("../../Modules/Users/staff");
+const User = require("../../Modules/User");
 const mailSender =require("../../MiddleWares/sendMail");
 
 router
@@ -15,22 +15,21 @@ router
   .post(allowCors.corsWithOptions, async (req, res) => {
   try{
   const emailSchem =joi.object({
-      staffId:joi.string()
+      email:joi.string().required().email()
   });
   const {error} = emailSchem.validate(req.body)
   if (error) res.status(401).json({error:error, message:'invalid email'})
 
   //chek if user exist
-  const user = await Staff.findOne({staffId:req.body.staffId})
+  const user = await User.findOne({email:req.body.email})
   if (!user) return res.status(401).json({error:error, message:'Invalid email'})
   //generat verifecation code
   const resetCode = Math.floor(1000 + Math.random() * 9000);
   let payloadData={
-      to:user.email,
+      to:req.body.email,
       subject:"Reset Password",
-      content:"Hi we received a request to reset your password, please use this code to reset your password "+resetCode
+      content:"Hi we required a request to reset your password, please use this code to reset your password "+resetCode
   }
-  console.log(payloadData)
   mailSender(payloadData);//nodemailer middleware
   
    user.resetPassword = {
@@ -42,7 +41,7 @@ router
       console.log('unable to send email')
       res.status(400).send(err);
   })
-  res.status(200).json(user.email);
+  res.send('resetCode');
 }catch(err){
   console.log(err);
 }
