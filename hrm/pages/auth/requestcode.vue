@@ -33,7 +33,7 @@
                                     dense
                                 ></v-text-field>
                                 
-                                <v-btn color="primary" dense @click="login" >
+                                <v-btn color="primary" dense @click="requestCode" >
                                     Request Code <v-icon class="ml-3">mdi-account</v-icon>
                                 </v-btn>
                             </v-form>
@@ -59,16 +59,18 @@ export default {
     computed: {
         user(){
             return this.$store.getters['account/getUser']
-        }
+        },
+        redirect(){
+            return this.$store.getters['settings/getRedirect']
+        },
 	},
     methods: {
         
-        login(){
+        requestCode(){
            let  data={
             staffId:this.staffId,
-            password:this.password
             }
-            this.$store.dispatch("account/staffLogin",data);
+            this.$store.dispatch("account/requestCode",data);
         }
     },
     watch: {
@@ -77,7 +79,13 @@ export default {
 				//this.$router.push('/') 
 			}
 			
-		}
-	  },
+		},
+        redirect(val){
+            if(val){
+                this.$store.dispatch("settings/setRedirect",false)
+                this.$router.push('/auth/verifycode') 
+            }
+        }
+    }
 }
 </script>
