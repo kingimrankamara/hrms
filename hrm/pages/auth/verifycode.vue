@@ -16,42 +16,30 @@
                         </div>
                         <v-col cols="12" sm="6" class="primary-bg light h-100vh">
                            <div class="center mt-5">
-                            <h1>{{title}}</h1>                            
+                            <h1>{{title}}</h1>
+                            <p class="p-18">Please enter the code verification sent tou your email</p>                  
                            </div>
                         </v-col>
                         <v-col cols="12" sm="6">
                             <v-form>
                                 <v-text-field
                                     class="text-uppercase"
-                                    v-model="staffId"
-                                    
-                                    label="Staf ID"
+                                    v-model="code"
+                                    label="Auth Code"
+                                    :rules="codeRule"
                                     outlined
                                     dense
                                 ></v-text-field>
-                                <v-text-field
-                                    class="text-uppercase"
-                                    v-model="password"
-                                    
-                                    label="Password"
-                                    outlined
-                                    dense
-                                ></v-text-field>
-
-                                
-                                <v-btn color="primary" dense @click="login" class="mt-3">
-                                    Login <v-icon class="ml-3 mb-2">mdi-account</v-icon>
+                               
+                                <v-btn color="primary" dense @click="verifyCode" >
+                                    Verify  <v-icon class="ml-3">mdi-password</v-icon>
                                 </v-btn>
-                                <div class="mt-5">
-                                    <small>
-                                    <nuxt-link to="/auth/requestcode">Forget passwor?</nuxt-link>
-                                </small>
-                                </div>
                             </v-form>
                         </v-col>
                     </v-row>
                         </v-card-text>
                 </v-card>
+                
                 </v-col>
                 </v-row>
        
@@ -62,26 +50,34 @@
 export default {
     data() {
         return {
-            staffId:null,
-            password:null,
-            title:"Login",
-            loginType:'Staff Login'
+            disabled:true,
+            repassword:null,
+            code:null,
+            title:"Verify Auth Code",
+            codeRule: [
+                v => !!v || 'New Password is required',
+            ],
+           
         }
     },
     computed: {
         user(){
             return this.$store.getters['account/getUser']
-        }
+        },
+        redirect(){
+            return this.$store.getters['settings/getRedirect']
+        },
 	},
     methods: {
         
-        login(){
+        verifyCode(){
            let  data={
-            staffId:this.staffId,
-            password:this.password
+            code:this.code,
+            staffId:window.localStorage.getItem("staffId")
             }
-            this.$store.dispatch("account/staffLogin",data);
-        }
+            this.$store.dispatch("account/verifyCode",data);
+        },
+       
     },
     watch: {
 		user(val){
@@ -89,7 +85,13 @@ export default {
 				this.$router.push('/') 
 			}
 			
-		}
+		},
+        redirect(val){
+            if(val){
+                this.$store.dispatch("settings/setRedirect",false)
+                this.$router.push('/auth/resetpassword') 
+            }
+        }
 	  },
 }
 </script>

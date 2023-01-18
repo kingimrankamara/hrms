@@ -20,6 +20,11 @@ export const state = () => ({
             {day:'2022-10-11',act:{in:"8:11:20",out:'17:00:00'}},
             {day:'2022-10-16',act:{in:"8:11:00",out:'17:00:00'}},
         ],
+        snackAlert:{
+            color:'black',
+            text:'',
+            value:false
+        }
      });
 export const  mutations= { 
         pushData(state,payload){
@@ -60,12 +65,18 @@ export const  mutations= {
                 state.attendance.push(payload)
             }
             console.log(att,payload);
+        },
+        setSnackAlert(state,payload){
+            state.snackAlert=payload
         }
      };
      export const    actions= {  
         setAttendance({commit},payload){
            
             commit("setAttendance",payload);
+        },
+        setSnackAlert({commit},payload){
+            commit("setSnackAlert",payload);
         },
         companySetup({dispatch,commit},payload){
             dispatch('settings/setLoading',{loading:true,message:'Adding Employee'},{root:true})
@@ -240,6 +251,21 @@ export const  mutations= {
                 console.log(err)
             })
         },
+
+
+        //lone requests 
+        requestLone({dispatch, commit},payload){
+            dispatch('settings/setLoading',{loading:true,message:'Requesting'},{root:true})
+            this.$axios
+            .$post(`${baseUrl}/api/lonerequest/request`, payload)
+            .then((res) => {
+                commit("pushData",{data:res.data, itemsName:"leaves"});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+                dispatch('settings/setRedirect',true,{root:true});
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
        
     };
     export const getters= { 
@@ -286,6 +312,9 @@ export const  mutations= {
                 d.push(data.act)
             });
             return d
-        }
+        },
+        snackAlert(state){
+            return state.snackAlert;
+        },
     }
   

@@ -2,15 +2,14 @@ const express = require("express");
 const Joi = require("joi");
 const allowCors = require("../MiddleWares/AllowCors");
 const router = express.Router();
-const LoneRequest = require("../Modules/LoneRequest");
-
+const LoneRequest = require("../Modules/Lone");
+const VerifyUser =require("../MiddleWares/VerifyUser")
 
 router.route("/request")
 .options(allowCors.corsWithOptions, (req, res) => {
   res.sendStatus(200);
-}).post(allowCors.corsWithOptions, async (req, res) => {
+}).post(allowCors.corsWithOptions,VerifyUser, async (req, res) => {
   try {
-   
 
     const loanSchema = Joi.object({
         requestedBy: Joi.object().required(),
@@ -39,13 +38,14 @@ router.route("/request")
 
 //get all LoneRequest
 router
-.route("/getLoneRequests")
+.route("/getOwnLoneRequestss")
 .options(allowCors.corsWithOptions, (req, res) => {
   res.sendStatus(200);
 })
-.get(allowCors.corsWithOptions, async (req, res) => {
+.get(allowCors.corsWithOptions,VerifyUser, async (req, res) => {
   try {
-   let loneRequest = await LoneRequest.find().populate('employeeId');
+   const uid = req.user.uid;
+   let loneRequest = await LoneRequest.find({requestedBy:uid});
     res.status(200).json(loneRequest)
   }catch(error){
      res.json(error)
@@ -55,16 +55,20 @@ router
 
 //get single department
 router
-.route("/get/:id")
+.route("/getOwne/:id")
 .options(allowCors.corsWithOptions, (req, res) => {
   res.sendStatus(200);
 })
-.get(allowCors.corsWithOptions, async (req, res) => {
+.get(allowCors.corsWithOptions,VerifyUser, async (req, res) => {
   try {
+    const uid = req.user.uid;
     const id = req.params.id;
-   let loneRequest = await LoneRequest.findById(id).populate("employeeId")
-   //teachers here
-   res.status(200).json(loneRequest)
+    let lone = await LoneRequest.findById(id);
+   
+   if (loan.staffId.toString() !== uid) {
+      return res.status(401).json({ message: 'Not authorized' });
+   }
+   res.status(200).json(lone)
   }catch(error){
      res.json(error)
   }
@@ -74,19 +78,21 @@ router
 //update LoneRequest data
 //update LoneRequest
 router
-.route("/update/:id")
+.route("/updateOwne/:id")
 .options(allowCors.corsWithOptions, (req, res) => {
   res.sendStatus(200);
 })
-.post(allowCors.corsWithOptions, async (req, res) => {
+.post(allowCors.corsWithOptions,VerifyUser, async (req, res) => {
   try {
-    const uid = req.params.id
-    LoneRequest.findByIdAndUpdate(uid,req.body, function(err, resp){
-      if(err){
-        res.json(err.message);
-      }
-      res.json(resp);
-    })
+    const uid = req.params.id;
+    const loan = await LoneRequest.findById(id);
+    if (loan.staffId.toString() !== uid) {
+      return res.status(401).json({ message: 'Not authorized'});
+   }
+    lone.set(req.body);
+    await lone.save();
+    res.json(lone);
+
   }catch(error){
      error = {message:"Internal Server Error"}
      res.json(error.message)

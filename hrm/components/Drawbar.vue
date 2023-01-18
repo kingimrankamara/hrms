@@ -1,6 +1,7 @@
 <template>
     <div>
       <Loading/>
+      <SnackBarVue/>
         <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -47,9 +48,10 @@
   import AdminNavList from './default/AdminNavList.vue';
   import staffNavListVue from './default/staffNavList.vue';
   import Loading from'./Loading.vue'
+  import SnackBarVue from './SnackBar.vue';
     export default {
       name: 'DefaultLayout',
-      components:{userAvatarVue,AdminNavList,staffNavListVue,Loading},
+      components:{userAvatarVue,AdminNavList,staffNavListVue,Loading,SnackBarVue},
       data () {
         return {
           clipped: false,

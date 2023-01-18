@@ -20,13 +20,15 @@
 .u-list li{
     list-style-type: none;
     line-height: 2;
-    
 }
 .u-list li:nth-child(odd){
    color: var(--secondary);
 }
 .h-100{
     height: 100%;
+}
+.h-100vh{
+   min-height: 90vh; 
 }
 .pointer{
     cursor: pointer;
@@ -139,3 +141,35 @@
  .right-text{
     text-align: right;
  }
+ .p-18{
+    font-size: 18px;
+ }
+ .relative{
+    position:relative;
+ }
+
+ .primary-bg{
+    background:url(../static/bg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+ }
+ .custom-shape-divider-bottom-1673771229 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1673771229 svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 150px;
+}
+
+.custom-shape-divider-bottom-1673771229 .shape-fill {
+    fill: #FFFFFF;
+}
