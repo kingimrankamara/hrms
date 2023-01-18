@@ -103,7 +103,7 @@ export default {
     watch: {
 		user(val){
 			if(val){
-				//this.$router.push('/') 
+				this.$router.push('/') 
 			}
 			
 		}

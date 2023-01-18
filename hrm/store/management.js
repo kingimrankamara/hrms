@@ -251,6 +251,21 @@ export const  mutations= {
                 console.log(err)
             })
         },
+
+
+        //lone requests 
+        requestLone({dispatch, commit},payload){
+            dispatch('settings/setLoading',{loading:true,message:'Requesting'},{root:true})
+            this.$axios
+            .$post(`${baseUrl}/api/lonerequest/request`, payload)
+            .then((res) => {
+                commit("pushData",{data:res.data, itemsName:"leaves"});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+                dispatch('settings/setRedirect',true,{root:true});
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
        
     };
     export const getters= { 

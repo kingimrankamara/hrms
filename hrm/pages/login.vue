@@ -38,12 +38,15 @@
                                     dense
                                 ></v-text-field>
 
-                                <small>
+                                
+                                <v-btn color="primary" dense @click="login" class="mt-3">
+                                    Login <v-icon class="ml-3 mb-2">mdi-account</v-icon>
+                                </v-btn>
+                                <div class="mt-5">
+                                    <small>
                                     <nuxt-link to="/auth/requestcode">Forget passwor?</nuxt-link>
                                 </small>
-                                <v-btn color="primary" dense @click="login" class="mt-3">
-                                    Login <v-icon class="ml-3">mdi-account</v-icon>
-                                </v-btn>
+                                </div>
                             </v-form>
                         </v-col>
                     </v-row>

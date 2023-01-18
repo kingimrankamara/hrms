@@ -54,7 +54,9 @@ export const   actions= {
             dispatch("getUser",res)
             dispatch('settings/setLoading',{loading:false,message:''},{root:true})
         }).catch(res=>{
-            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true})
+            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
+            let message =err.response.data.message;
+            dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
         })
     },
 
@@ -80,8 +82,10 @@ export const   actions= {
             dispatch('settings/setLoading',{loading:false,message:''},{root:true})
             window.localStorage.setItem("staffId", payload.staffId);
             dispatch('settings/setRedirect',true,{root:true});
-        }).catch(res=>{
-            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true})
+        }).catch(err=>{
+            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
+            let message =err.response.data.message;
+            dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
         })
     },
     verifyCode({dispatch, commit},payload){
@@ -94,8 +98,10 @@ export const   actions= {
             // set passAuth
             window.localStorage.setItem("passAuth", res);
             dispatch('settings/setRedirect',true,{root:true});
-        }).catch(res=>{
-            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true})
+        }).catch(err=>{
+            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
+            let message =err.response.data.message;
+            dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
         })
     },
     newPassword({dispatch, commit},payload){
@@ -110,10 +116,10 @@ export const   actions= {
         .then((res) => {
             dispatch('settings/setLoading',{loading:false,message:''},{root:true});
             dispatch('settings/setRedirect',true,{root:true});
+            $nuxt.$router.$push('/login');
         }).catch(err=>{
             dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
-            console.log(err.response.data.message)
-            let message =err.response.data.message;
+            let message =err.response.data.message || 'error';
             dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
         })
     },
@@ -142,7 +148,8 @@ export const   actions= {
             })
             .catch((error) => {
             // commit("setLoading", false);
-            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true})
+            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
+            $nuxt.$router.$push('/login');
             });
         },
 };
