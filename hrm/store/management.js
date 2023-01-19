@@ -20,11 +20,6 @@ export const state = () => ({
             {day:'2022-10-11',act:{in:"8:11:20",out:'17:00:00'}},
             {day:'2022-10-16',act:{in:"8:11:00",out:'17:00:00'}},
         ],
-        snackAlert:{
-            color:'black',
-            text:'',
-            value:false
-        }
      });
 export const  mutations= { 
         pushData(state,payload){
@@ -65,18 +60,12 @@ export const  mutations= {
                 state.attendance.push(payload)
             }
             console.log(att,payload);
-        },
-        setSnackAlert(state,payload){
-            state.snackAlert=payload
         }
      };
      export const    actions= {  
         setAttendance({commit},payload){
            
             commit("setAttendance",payload);
-        },
-        setSnackAlert({commit},payload){
-            commit("setSnackAlert",payload);
         },
         companySetup({dispatch,commit},payload){
             dispatch('settings/setLoading',{loading:true,message:'Adding Employee'},{root:true})
@@ -254,7 +243,6 @@ export const  mutations= {
             })
         },
 
-
         //lone requests 
         requestLone({dispatch, commit},payload){
             let token = window.localStorage.getItem("authToken");
@@ -322,9 +310,6 @@ export const  mutations= {
                 d.push(data.act)
             });
             return d
-        },
-        snackAlert(state){
-            return state.snackAlert;
-        },
+        }
     }
   

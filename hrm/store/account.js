@@ -54,9 +54,7 @@ export const   actions= {
             dispatch("getUser",res)
             dispatch('settings/setLoading',{loading:false,message:''},{root:true})
         }).catch(res=>{
-            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
-            let message =err.response.data.message;
-            dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
+            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true})
         })
     },
 
@@ -71,57 +69,6 @@ export const   actions= {
     verifyToken({ dispatch, commit }, payload){
         userType=payload.userType;
         dispatch("getUser",payload.token)
-    },
-
-    //forget password #### request code
-    requestCode({dispatch, commit},payload){
-        dispatch('settings/setLoading',{loading:true,message:'Loging In'},{root:true})
-
-        this.$axios.$post(`${baseUrl}/api/resetpassword`, payload)
-        .then((res) => {
-            dispatch('settings/setLoading',{loading:false,message:''},{root:true})
-            window.localStorage.setItem("staffId", payload.staffId);
-            dispatch('settings/setRedirect',true,{root:true});
-        }).catch(err=>{
-            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
-            let message =err.response.data.message;
-            dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
-        })
-    },
-    verifyCode({dispatch, commit},payload){
-        dispatch('settings/setLoading',{loading:true,message:'Loging In'},{root:true})
-
-        this.$axios.$post(`${baseUrl}/api/resetpassword/verifyCode`, payload)
-        .then((res) => {
-            dispatch('settings/setLoading',{loading:false,message:''},{root:true});
-            
-            // set passAuth
-            window.localStorage.setItem("passAuth", res);
-            dispatch('settings/setRedirect',true,{root:true});
-        }).catch(err=>{
-            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
-            let message =err.response.data.message;
-            dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
-        })
-    },
-    newPassword({dispatch, commit},payload){
-        dispatch('settings/setLoading',{loading:true,message:'Loging In'},{root:true})
-        let authtoken= window.localStorage.getItem('passAuth')
-        this.$axios.$post(`${baseUrl}/api/resetpassword/newPassword`, payload,
-        {
-            headers: {
-                authtoken,
-            },
-        })
-        .then((res) => {
-            dispatch('settings/setLoading',{loading:false,message:''},{root:true});
-            dispatch('settings/setRedirect',true,{root:true});
-            $nuxt.$router.$push('/login');
-        }).catch(err=>{
-            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
-            let message =err.response.data.message || 'error';
-            dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
-        })
     },
     //get user 
     getUser({ dispatch, commit }, payload) {
@@ -148,8 +95,7 @@ export const   actions= {
             })
             .catch((error) => {
             // commit("setLoading", false);
-            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
-            $nuxt.$router.$push('/login');
+            dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true})
             });
         },
 };

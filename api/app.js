@@ -22,8 +22,6 @@ var leaveCRUD = require('./routes/Management/Leave');
 var ResetPassword = require('./routes/auth/staffForgetPassword');
 
 
-var ProcessLone = require('./routes/lone');//managemant
-var LoneRequest = require('./routes/loneRequest');
 
 //auth
 var staffLogin = require('./routes/auth/staffLogin');
@@ -69,9 +67,6 @@ app.use("/api/department/",departmentsCRUD);
 
   app.use("/api/resetpassword/",ResetPassword);
 
-
-  app.use("/api/processlone/",ProcessLone);
-  app.use("/api/lonerequest/",LoneRequest);
 
 
 //auth
