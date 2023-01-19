@@ -237,7 +237,31 @@ export const  mutations= {
                 commit("updateItem",{data:res, itemsName:"leaves"});
                 dispatch('settings/setLoading',{loading:false,message:'Loging In'},{root:true})
             }).catch(err=>{
-                console.log(err)
+                dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
+                let message =err.response.data.message ;
+                dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
+            })
+        },
+
+        //lone requests 
+        requestLone({dispatch, commit},payload){
+            let token = window.localStorage.getItem("authToken");
+            let persedToken =JSON.parse(token);
+            dispatch('settings/setLoading',{loading:true,message:'Requesting'},{root:true})
+            this.$axios
+            .$post(`${baseUrl}/api/lonerequest/request`, payload,{
+                headers: {
+                    authtoken:persedToken.token
+                },
+            })
+            .then((res) => {
+                commit("pushData",{data:res.data, itemsName:"leaves"});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+                dispatch('settings/setRedirect',true,{root:true});
+            }).catch(err=>{
+                dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
+                let message =err.response.data.message;
+                dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
             })
         },
        
