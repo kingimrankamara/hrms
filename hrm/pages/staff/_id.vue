@@ -38,6 +38,17 @@
                                 <li>: <span v-if="staff.department">{{staff.department.name}}</span> </li>
                             </ul>
                         </v-col>
+                        <v-col v-if="admin">
+                            <p>Change Staff Role/ access level</p>
+                            <v-combobox
+                                    v-model="staff.role"
+                                    :roles="emTypeOptions"
+                                    label="Acess Level"
+                                    dense
+                                    outlined  
+                                    @change="roleChange"
+                                ></v-combobox>
+                        </v-col>
                     </v-row>
                    
                 </v-col>
@@ -127,6 +138,20 @@ export default {
         },
         baseUrl(){
             return this.$store.getters['management/baseUrl']
+        },
+        admin(){
+          let u = this.$store.getters['account/getUser'];
+          if(u){
+            if(u.role !='Admin'){
+                return true
+          }
+          }
+          return false
+        }
+    },
+    methods: {
+        roleChange(){
+            this.$store.dispatch('managemant/updateStaff', this.staff)
         }
     },
 }

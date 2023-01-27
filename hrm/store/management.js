@@ -157,6 +157,17 @@ export const  mutations= {
             });
 
         },
+        updateStaff({dispatch,commit},payload){
+            dispatch('settings/setLoading',{loading:true,message:'updating Employee'},{root:true})
+            this.$axios
+            .$post(`${baseUrl}/api/staff/update`, payload)
+            .then((response) => {
+               payload.data.pp=response.pp;
+               this.$axios
+            });
+
+        },
+        
  
 
         getStaff({dispatch,commit}, payload) {
@@ -187,7 +198,6 @@ export const  mutations= {
                 commit("setData", {itemsName:"st",data:response});
                 })
         },
-
         deleteStaff({commit},payload){
             this.$axios
             .$post(`${baseUrl}/api/staff/delete/${payload}`, payload)
