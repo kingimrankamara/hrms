@@ -11,9 +11,9 @@
                         <h3>{{staff.jobTitle}}</h3>
                     </div>
                 </v-col>
-                <v-col cols="12" sm="6">
+                <v-col cols="12" sm="8">
                     <v-row>
-                        <v-col cols="6">
+                        <v-col cols="5">
                             <ul class="u-list">
                                 <li>Staff ID</li>
                                 <li>Name</li>
@@ -26,7 +26,7 @@
                             </ul>
                         </v-col>
 
-                        <v-col cols="6">
+                        <v-col cols="4">
                             <ul class="u-list">
                                 <li>:{{staff.staffId}}</li>
                                 <li>:{{staff.firstName}} <span v-if="staff.middleName">{{staff.middleName}}</span> {{staff.lastName}}</li>
@@ -38,11 +38,10 @@
                                 <li>: <span v-if="staff.department">{{staff.department.name}}</span> </li>
                             </ul>
                         </v-col>
-                        <v-col v-if="admin">
-                            <p>Change Staff Role/ access level</p>
+                        <v-col cols="12" sm="3" v-if="admin">
                             <v-combobox
                                     v-model="staff.role"
-                                    :roles="emTypeOptions"
+                                    :items="roles"
                                     label="Acess Level"
                                     dense
                                     outlined  
@@ -126,7 +125,7 @@
 export default {
     data() {
         return {
-            
+            roles:['Staff','Admin']
         }
     },
     computed: {
@@ -134,7 +133,11 @@ export default {
             return this.$route.params.id
         },
         staff(){
-            return this.$store.getters['management/getStaffById'](this.id)
+            let st= this.$store.getters['management/getStaffById'](this.id)
+            if(st){
+                let newStaff = Object.assign({}, st)
+            return newStaff
+            }
         },
         baseUrl(){
             return this.$store.getters['management/baseUrl']
@@ -142,16 +145,16 @@ export default {
         admin(){
           let u = this.$store.getters['account/getUser'];
           if(u){
-            if(u.role !='Admin'){
+            if(u.role =='Admin'){
                 return true
+            }
+            else return false
           }
-          }
-          return false
         }
     },
     methods: {
         roleChange(){
-            this.$store.dispatch('managemant/updateStaff', this.staff)
+            this.$store.dispatch('management/updateStaff', this.staff)
         }
     },
 }

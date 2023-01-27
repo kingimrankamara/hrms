@@ -161,12 +161,13 @@ export const  mutations= {
         updateStaff({dispatch,commit},payload){
             dispatch('settings/setLoading',{loading:true,message:'updating Employee'},{root:true})
             this.$axios
-            .$post(`${baseUrl}/api/staff/update`, payload)
+            .$post(`${baseUrl}/api/staff/update/${payload._id}`, payload)
             .then((response) => {
-               payload.data.pp=response.pp;
-               this.$axios
-            });
-
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+            }).catch(err=>
+                {
+                    dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+                })
         },
         
  
