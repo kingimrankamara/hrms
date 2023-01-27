@@ -394,11 +394,11 @@
                         <li>Name: {{ staff.lastName }}  
                             <span v-if="staff.middleName">{{ staff.middleName }}</span> {{ staff.firstName }}</li>
                         <li>StaffId: {{ staff.staffId }}</li>
-                        <li color="primary">Password: {{ staff.generatedPassword }}</li>
+                        <li color="primary" class="mt-3">Password: {{ staff.generatedPassword }}</li>
                    </ul>
                 </v-card>
                 <v-card-actions>
-                    <v-btn color="error" @click="staffDetailsDialog !=staffDetailsDialog">Close</v-btn>
+                    <v-btn color="error" @click="staffDetailsDialog = !staffDetailsDialog">Close</v-btn>
                 </v-card-actions>
             </v-dialog>
         </v-container>

@@ -54,7 +54,7 @@
 
       <template v-slot:item.actions="{item}">
          <div>
-          <v-switch color="success">
+          <v-switch color="success" @change="manageAttendance(item)">
 
           </v-switch>
          </div>
@@ -113,7 +113,13 @@
       },
     },
     methods: {
-  
+      manageAttendance(user){
+        if(checkin){
+          //do something
+        }else{
+          //else
+        }
+      }
      
     },
   }
