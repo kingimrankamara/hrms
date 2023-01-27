@@ -2,6 +2,7 @@ import { baseUrl } from "./base";
 export const state = () => ({
         departments:[],
         staff:[],
+        lones:[],
         leaves:[],
         company:{},
         attendance:[
@@ -258,22 +259,46 @@ export const  mutations= {
                 commit("updateItem",{data:res, itemsName:"leaves"});
                 dispatch('settings/setLoading',{loading:false,message:'Loging In'},{root:true})
             }).catch(err=>{
-                console.log(err)
+                dispatch('settings/setLoading',{loading:false,message:'Requesting'},{root:true});
             })
         },
 
 
         //lone requests 
         requestLone({dispatch, commit},payload){
-            dispatch('settings/setLoading',{loading:true,message:'Requesting'},{root:true})
+            dispatch('settings/setLoading',{loading:true,message:'Requesting'},{root:true});
+            let authToken = window.localStorage.getItem("authToken");
+            let token =JSON.parse(authToken)
             this.$axios
-            .$post(`${baseUrl}/api/lonerequest/request`, payload)
+            .$post(`${baseUrl}/api/lonerequest/request`,payload,{
+                headers: {
+                  authtoken: token.token,
+                },
+              })
             .then((res) => {
-                commit("pushData",{data:res.data, itemsName:"leaves"});
+                commit("pushData",{data:res.data, itemsName:"lones"});
                 dispatch('settings/setLoading',{loading:false,message:''},{root:true});
                 dispatch('settings/setRedirect',true,{root:true});
             }).catch(err=>{
-                console.log(err)
+                dispatch('settings/setLoading',{loading:false,message:'Requesting'},{root:true});
+            })
+        },
+        getLones({dispatch, commit}){
+            dispatch('settings/setLoading',{loading:true,message:'Requesting'},{root:true});
+            let authToken = window.localStorage.getItem("authToken");
+            let token =JSON.parse(authToken)
+            this.$axios
+            .$get(`${baseUrl}/api/processlone/getlones`,{
+                headers: {
+                  authtoken: token.token,
+                },
+              })
+            .then((res) => {
+                console.log(res)
+                commit("setData",{data:res, itemsName:"lones"});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+            }).catch(err=>{
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
             })
         },
        
@@ -308,7 +333,6 @@ export const  mutations= {
             return state.attendance;
         },
         dates(state){
-            console.log("jhjlll")
             let d=[]
              state.attendance.forEach(data => {
                 d.push(data.day)
@@ -316,7 +340,6 @@ export const  mutations= {
             return d
         },
         times(state){
-            console.log("jhjlll")
             let d=[]
              state.attendance.forEach(data => {
                 d.push(data.act)
@@ -326,5 +349,8 @@ export const  mutations= {
         snackAlert(state){
             return state.snackAlert;
         },
+        getLones(state){
+            return state.lones
+        }
     }
   

@@ -66,7 +66,7 @@ export default {
         return {
             snackbar:false,
             text: `SUCCESS: Lone request submited`,
-            amount:0,
+            amount:null,
             valid:false,
             message:'',
             required: [

@@ -38,9 +38,16 @@
       <v-list-item-icon>
         <v-icon>mdi-daller</v-icon>
       </v-list-item-icon>
-      
       <v-list-item-title>Salaries</v-list-item-title>
     </v-list-item>
+
+    <v-list-item to="/lone/lones">
+      <v-list-item-icon>
+        <v-icon>mdi-daller</v-icon>
+      </v-list-item-icon>
+      <v-list-item-title>Lone Requests</v-list-item-title>
+    </v-list-item>
+
     <v-list-item to="/events">
       <v-list-item-icon>
         <v-icon>mdi-calendar-clock-outline</v-icon>
@@ -85,12 +92,6 @@ export default {
         items: [{ title: 'Requests', to:'/leave/requests' }],
         title: 'Leaves',
       },
-      {
-        action: 'mdi-town-hall',
-        items: [{ title: 'Edu & Trainings', to:'/edu' }],
-        title: 'Edu & Training',
-      },
-    
     ],
   }),
 }
