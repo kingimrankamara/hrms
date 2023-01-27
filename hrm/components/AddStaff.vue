@@ -384,22 +384,23 @@
 
             <v-dialog
                 v-model="staffDetailsDialog"
-                width="400"
+                width="500"
                 persistent
                 
                 >
-                <v-card class="text-center">
+                <v-card class="text-center pa-5">
                    <p>Please write down staff credentials before closing this dialog</p> 
                    <ul v-if="staff">
                         <li>Name: {{ staff.lastName }}  
                             <span v-if="staff.middleName">{{ staff.middleName }}</span> {{ staff.firstName }}</li>
-                        <li>StaffId: {{ staff.staffId }}</li>
-                        <li color="primary" class="mt-3">Password: {{ staff.generatedPassword }}</li>
+                        <li class="mt-2 info--text">Staff ID: {{ staff.staffId }}</li>
+                        <li color="info" class="mt-2 info--text">Password: {{ generatedPassword }}</li>
                    </ul>
-                </v-card>
-                <v-card-actions>
+                   <v-card-actions>
                     <v-btn color="error" @click="staffDetailsDialog = !staffDetailsDialog">Close</v-btn>
                 </v-card-actions>
+                </v-card>
+                
             </v-dialog>
         </v-container>
     </div>
