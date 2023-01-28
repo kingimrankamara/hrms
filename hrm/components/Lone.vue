@@ -8,10 +8,12 @@
       
     >
     <template v-slot:item.stffId="{item}">
-      <div>{{ item.requestedBy.staffId }}</div>
+      <div v-if="item.requestedBy">{{ item.requestedBy.staffId }}</div>
     </template>
     <template v-slot:item.status="{item}">
-     <div >{{ item.status }}</div>
+      <v-chip :class="{'error':item.status=='denied', 'success':item.status=='approved'}">
+        {{ item.status }}
+      </v-chip>
     </template>
       <template v-slot:item.name="{item}">
           <div class="primary--text" v-if="item.requestedBy">
@@ -59,18 +61,50 @@
             </template>
             <v-card>
               <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
+                <span class="text-h5">Request Details</span>
               </v-card-title>
   
               <v-card-text>
                 <v-container>
                  
                  <v-row v-if="editedItem.requestedBy">
-                    <v-col cols="12" md="8">
-                      Name: {{ editedItem.requestedBy.firstName }}
+                    <v-col cols="12" sm="5">
+                      Name: {{ editedItem.requestedBy.firstName }} 
+                      <span v-if="editedItem.requestedBy.middleName"> {{ editedItem.requestedBy.firstName }}</span>
+                      <span>{{editedItem.requestedBy.lastName}}</span>
                     </v-col>
-                    <v-col cols="12" md="4">
-                      ID: {{ editedItem.requestedBy.staffId }}
+                    <v-col cols="6" sm="4">
+                      Staff ID: {{ editedItem.requestedBy.staffId }}
+                    </v-col>
+                    <v-col cols="6" sm="3">
+                      <v-chip :class="{'error':editedItem.status=='cancled', 'success':editedItem.status=='approved'}">
+                        {{ editedItem.status }}
+                      </v-chip>
+                    </v-col>
+                    <v-col cols="6">
+                      <h3 class="text--primary">
+                        {{ editedItem.amount | currency }}
+                      </h3>
+                    </v-col>
+                    <v-col cols="6">
+                      <v-chip>
+                        {{ editedItem.dateApplied | moment("dddd, MMMM Do YYYY") }}
+                      </v-chip>
+                    </v-col>
+                    <v-col cols="12">
+                      <p>
+                        {{ editedItem.message }}
+                      </p>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-combobox
+                                v-model="editedItem.status"
+                                :items="status"
+                                label="Process Request"
+                                dense
+                                outlined  
+                                @change="processLone"
+                            ></v-combobox>
                     </v-col>
                  </v-row>
                 </v-container>
@@ -83,15 +117,9 @@
                   text
                   @click="close"
                 >
-                  Cancel
+                  Close
                 </v-btn>
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="save"
-                >
-                  Save
-                </v-btn>
+               
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -136,6 +164,7 @@
       data: () => ({
         dialog: false,
         dialogDelete: false,
+        status:['pending','approved','cancled','denied'],
         headers: [
           {
             text: 'Staff ID',
@@ -161,12 +190,14 @@
           status:null,
           amount:null,
           message:'',
+          dateApplied:null
         },
         defaultItem: {
           staff: {},
           status:null,
           amount:null,
           message:'',
+          dateApplied:null
         },
       }),
   
@@ -202,6 +233,8 @@
    
         editItem (item) {
           this.editedIndex = this.lones.indexOf(item);
+          this.editedItem = Object.assign({}, item)
+          this.dialog=true;
         },
   
         deleteItem (item) {
@@ -230,33 +263,11 @@
             this.editedIndex =-1
           })
         },
-        prepData(){
-          let teacher=[];
-          
-           if(this.editedItem.staff.length>0){
-            this.editedItem.staff.forEach(te=>{
-              teacher.push({_id:te.value})
-            })
-            this.editedItem.staff=teacher
-           }
-        },
-        save () {
-          this.prepData();
-          if (this.editedIndex > -1) {
-            this.editedItem.hods={_id:this.editedItem.hods[0]}
-            this.editedItem.hods={_id:this.editedItem.hods._id[0]}
-            this.$store.dispatch('management/updateDepartment',this.editedItem)
-          } else {
-            this.editedItem.hods={_id: this.editedItem.hods.value}
-           this.$store.dispatch('management/addDepartment',this.editedItem)
-          }
-          this.$nextTick(() => {
-            this.editedItem = Object.assign({}, this.defaultItem)
-            this.editedIndex =-1
-          })
-          this.close()
-          
-        },
+        
+        processLone(){
+          this.$store.dispatch('management/processLone',this.editedItem);
+          this.dialog=false
+        }
       },
     }
   </script>

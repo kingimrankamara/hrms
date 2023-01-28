@@ -58,10 +58,8 @@
     </div>
 </template>
 <script>
-    import DatePicker from "../../components/default/DatePicker.vue"
 
 export default {
-    components:{DatePicker},
     data() {
         return {
             snackbar:false,

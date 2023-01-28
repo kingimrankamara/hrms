@@ -302,6 +302,26 @@ export const  mutations= {
                 dispatch('settings/setLoading',{loading:false,message:''},{root:true});
             })
         },
+
+        //process //update lone
+        processLone({dispatch, commit},payload){
+            dispatch('settings/setLoading',{loading:true,message:'Processing Lone'},{root:true});
+            let authToken = window.localStorage.getItem("authToken");
+            let token =JSON.parse(authToken)
+            this.$axios
+            .$post(`${baseUrl}/api/processlone/update/${payload._id}`,payload,{
+                headers: {
+                  authtoken: token.token,
+                },
+              })
+            .then((res) => {
+                commit("updateItem",{payload, itemsName:"lones"});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+                dispatch('settings/setRedirect',true,{root:true});
+            }).catch(err=>{
+                dispatch('settings/setLoading',{loading:false,message:'Requesting'},{root:true});
+            })
+        },
        
     };
     export const getters= { 
