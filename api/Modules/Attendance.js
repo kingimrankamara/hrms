@@ -1,3 +1,6 @@
+const mongoose = require("mongoose");
+
+
 const attendanceSchema = new mongoose.Schema({
     staff: {
       type: mongoose.Schema.Types.ObjectId,
@@ -6,7 +9,7 @@ const attendanceSchema = new mongoose.Schema({
     },
     clockIn: {
       type: Date,
-      default: Date.now,
+      default: new Date(),
       required: true
     },
     clockOut: {
