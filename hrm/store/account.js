@@ -116,9 +116,29 @@ export const   actions= {
         .then((res) => {
             dispatch('settings/setLoading',{loading:false,message:''},{root:true});
             dispatch('settings/setRedirect',true,{root:true});
-            $nuxt.$router.$push('/login');
+            $nuxt.$router.push('/login');
         }).catch(err=>{
             dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
+            let message =err.response.data.message || 'error';
+            dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
+        })
+    },
+
+
+    //attendance /clock-in/clock-out
+    clockIn({dispatch, commit,state},payload){
+        dispatch('settings/setLoading',{loading:true,message:'Loging In'},{root:true})
+        let authtoken= state.authToken
+        this.$axios.$post(`${baseUrl}/api/attendance/checkin`,{staffId:{_id:payload._id}},
+        {
+            headers: {
+                authtoken,
+            },
+        })
+        .then((res) => {
+            dispatch('settings/setLoading',{loading:false,message:'Clocking in'},{root:true});
+        }).catch(err=>{
+            dispatch('settings/setLoading',{loading:false,message:''},{root:true});
             let message =err.response.data.message || 'error';
             dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
         })
@@ -128,7 +148,7 @@ export const   actions= {
         let token = payload;
         dispatch('settings/setLoading',{loading:true,message:'Authenticating'},{root:true})
         this.$axios
-            .$get(`${baseUrl}/api/${userType}/verify`, {
+            .$get(`${baseUrl}/api/${userType}/verify`,{
             headers: {
                 authtoken: token,
             },
@@ -138,6 +158,7 @@ export const   actions= {
             commit("setUser", response);
             dispatch('settings/setLoading',{loading:false,message:''},{root:true})
             if(userType=='staff'){
+
                 dispatch('management/getCompany',token,{root:true});
                 dispatch('management/getdepartments',token,{root:true});
                 dispatch('management/getStaff',token,{root:true});
@@ -149,7 +170,7 @@ export const   actions= {
             .catch((error) => {
             // commit("setLoading", false);
             dispatch('settings/setLoading',{loading:false,message:'Authenticating'},{root:true});
-            $nuxt.$router.$push('/login');
+            $nuxt.$router.push('/login');
             });
         },
 };

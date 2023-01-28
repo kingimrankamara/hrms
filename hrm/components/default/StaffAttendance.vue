@@ -114,11 +114,7 @@
     },
     methods: {
       manageAttendance(user){
-        if(checkin){
-          //do something
-        }else{
-          //else
-        }
+        this.$store.dispatch("account/clockIn",user);
       }
      
     },

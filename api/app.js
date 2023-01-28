@@ -29,7 +29,7 @@ var LoneRequest = require('./routes/loneRequest');
 var staffLogin = require('./routes/auth/staffLogin');
 var verifyStaff = require('./routes/User/verify/staff');
 
-
+var Attendance = require('./routes/attendaance')
 //create admin on first startup
 CreateFirstAdmin();
 
@@ -73,6 +73,7 @@ app.use("/api/department/",departmentsCRUD);
   app.use("/api/processlone/",ProcessLone);
   app.use("/api/lonerequest/",LoneRequest);
 
+  app.use("/api/attendance/",Attendance);
 
 //auth
 app.use("/api/auth/staff/",staffLogin);

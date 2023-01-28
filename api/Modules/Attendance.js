@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 
 const attendanceSchema = new mongoose.Schema({
-    staff: {
+    staffId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Staff',
       required: true
@@ -18,4 +18,4 @@ const attendanceSchema = new mongoose.Schema({
   });
   
   const Attendance = mongoose.model('Attendance', attendanceSchema);
-  
+  module.exports = Attendance;
