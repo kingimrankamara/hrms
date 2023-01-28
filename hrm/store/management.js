@@ -202,7 +202,7 @@ export const  mutations= {
         },
         deleteStaff({commit},payload){
             this.$axios
-            .$post(`${baseUrl}/api/staff/delete/${payload}`, payload)
+            .$post(`${baseUrl}/api/staff/delete/${payload._id}`)
             .then((res) => {
                 commit("removeItem",{data:{_id:payload}, itemsName:"staff"});
             }).catch(err=>{

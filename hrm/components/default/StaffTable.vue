@@ -138,7 +138,7 @@
           <v-icon>mdi-pencil</v-icon>
          </v-btn>
 
-         <v-btn icon color="success" @click="deleteItem(item)">
+         <v-btn icon color="error" @click="deleteItem(item)">
           <v-icon>mdi-delete</v-icon>
          </v-btn>
          </div>
@@ -265,7 +265,7 @@ import StaffInfo from '../Documents/StaffInfo.vue';
     },
     methods: {
       deleteItem (item) {
-          this.editedIndex = this.departments.indexOf(item)
+          this.editedIndex = this.staffs.indexOf(item)
           this.editedItem = Object.assign({}, item)
           this.dialogDelete = true
         },
