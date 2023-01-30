@@ -1,3 +1,1 @@
-# hrms
- vue project
-hello feature branch
+hello and goodbye from our feature and master
