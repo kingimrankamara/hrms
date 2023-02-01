@@ -80,7 +80,7 @@
       :headers="headers"
       :items="notClockedIn"
       item-key="_id"
-      class="elevation-1"
+      class="elevation-1" 
       :search="search"
     >
       
