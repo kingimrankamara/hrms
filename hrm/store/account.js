@@ -6,6 +6,7 @@ export const state = () => ({
     isStudent:false,
     isStaff:false,
     isParent:false,
+    attendances:null
     
 });
 export const  mutations= { 
@@ -40,7 +41,11 @@ export const  mutations= {
     },
     setUser(state, payload){
         state.user=payload;
+    },
+    setAttendances(state,payload){
+        state.attendances=payload
     }
+    
 };
 export const   actions= {  
     
@@ -137,10 +142,28 @@ export const   actions= {
         })
         .then((res) => {
             dispatch('settings/setLoading',{loading:false,message:'Clocking in'},{root:true});
+            dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
         }).catch(err=>{
             dispatch('settings/setLoading',{loading:false,message:''},{root:true});
             let message =err.response.data.message || 'error';
             dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
+        })
+    },
+    getAttendance({dispatch, commit,state},payload){
+        dispatch('settings/setLoading',{loading:true,message:'Loging In'},{root:true})
+        let authtoken= state.authToken
+        this.$axios.$get(`${baseUrl}/api/attendance/getAll`,
+        {
+            headers: {
+                authtoken,
+            },
+        })
+        .then((res) => {
+            dispatch('settings/setLoading',{loading:false,message:'getting attendance data'},{root:true});
+            commit('setAttendances',res)
+        }).catch(err=>{
+            dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+            let message =err.response.data.message || 'error';
         })
     },
     //get user 
@@ -164,7 +187,7 @@ export const   actions= {
                 dispatch('management/getStaff',token,{root:true});
                 dispatch('management/getLeaves',token,{root:true});
                 
-                dispatch('accounting/getFees',token,{root:true});
+                dispatch('account/getAttendance',token,{root:true});
             }
             })
             .catch((error) => {
@@ -185,5 +208,8 @@ export const getters= {
     isAdmin(state){
         return state.isAdmin
     },
+    getAttendance(state){
+        return state.attendances
+    }
     }
   
