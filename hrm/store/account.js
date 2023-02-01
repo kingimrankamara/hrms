@@ -44,6 +44,9 @@ export const  mutations= {
     },
     setAttendances(state,payload){
         state.attendances=payload
+    },
+    pushToAttendance(state, payload){
+        state.attendances.push(payload)
     }
     
 };
@@ -139,14 +142,13 @@ export const   actions= {
             headers: {
                 authtoken,
             },
-        })
-        .then((res) => {
+        }).then((res) => {
+            commit("pushToAttendance",res);
             dispatch('settings/setLoading',{loading:false,message:'Clocking in'},{root:true});
             dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
         }).catch(err=>{
+            console.log(err)
             dispatch('settings/setLoading',{loading:false,message:''},{root:true});
-            let message =err.response.data.message || 'error';
-            dispatch('management/setSnackAlert',{value:true,text:message,color:'error'},{root:true});
         })
     },
     getAttendance({dispatch, commit,state},payload){

@@ -37,7 +37,7 @@
                    </v-form>
                 </v-col>
                 <v-col md="8" class='offset-md-2'  v-else>
-                    <div v-if="user">
+                    <div v-if="user" class="pa-5 mt-5">
                         Hi {{ user.lastName }}, you need to have worked with us for at list three month before you can be eligible for a lone
                     </div>
                 </v-col>
