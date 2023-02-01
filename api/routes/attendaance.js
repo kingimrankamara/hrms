@@ -4,6 +4,26 @@ const router = express.Router();
 const Attendance = require("../Modules/Attendance");
 const VerifyUser =require("../MiddleWares/VerifyUser")
 
+const User = require("../Modules/Users/staff")
+
+router
+.route("/getAll")
+.options(allowCors.corsWithOptions, (req, res) => {
+  res.sendStatus(200);
+})
+.get(allowCors.corsWithOptions, VerifyUser,async (req, res) => {
+  try {    
+    let attendance = await Attendance.find().populate({
+      path:'staffId',
+       model: 'staff'
+    })
+    res.status(200).json(attendance);
+  }catch(error){
+     error = {message:"Internal Server Error on checkin"}
+     res.status(500).json(error.message);
+  }
+});
+
 
 router
 .route("/checkin")
@@ -15,12 +35,14 @@ router
     const uid = req.user.uid;
     
     let attendance = new Attendance(req.body)
-    console.log(attendance)
-    attendance.save().then(data=>{
-      res.status(200).json(data);
-    }).catch(err=>{
-      res.json(400).json(err)
-    })
+    let a= await attendance.save()
+    let staff =await User.findById(uid)
+    
+      if(a){
+        a.staffId=staff
+        return res.status(200).json(a);
+      }else return res.json(400).json({error})
+      
   }catch(error){
      error = {message:"Internal Server Error on checkin"}
      res.status(500).json(error.message);
