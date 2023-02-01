@@ -2,7 +2,7 @@
     <div>
         <v-container>
             <v-row>
-                <v-col md="8" class='offset-md-2'>
+                <v-col md="8" class='offset-md-2' v-if="canTakeLeave">
                    <v-form ref="form" v-model="valid">
                     <v-row> 
 
@@ -35,6 +35,11 @@
                         Send Request <v-icon>mdi-kite</v-icon>
                     </v-btn>
                    </v-form>
+                </v-col>
+                <v-col md="8" class='offset-md-2'  v-else>
+                    <div v-if="user">
+                        Hi {{ user.lastName }}, you need to have worked with us for at list three month before you can be eligible for a lone
+                    </div>
                 </v-col>
             </v-row>
 
@@ -78,6 +83,18 @@ export default {
         },
         user(){
             return this.$store.getters['account/getUser']
+        },
+        canTakeLeave(){
+            if(this.user){
+                let dateStarted = new Date(this.user.dateStarted);
+                const currentDate = new Date();
+                const difference = currentDate.getTime() - dateStarted.getTime();
+                const threeMonths = 90 * 24 * 60 * 60 * 1000;
+
+                if(difference >= threeMonths){
+                    return true
+                }else return false
+            }
         }
     },
     methods: {
