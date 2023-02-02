@@ -144,6 +144,7 @@
           class="mr-2"
           @click="editItem(item)"
           color="info"
+          v-if="user.role =='Admin'"
         >
           mdi-pencil
         </v-icon>
@@ -220,13 +221,24 @@
         baseUrl(){
             return this.$store.getters['management/baseUrl']
         },
-        lones(){
-          return this.$store.getters['management/getLones']
-        },
-        
         user(){
             return this.$store.getters['account/getUser']
         },
+        lones(){
+          let allLones= this.$store.getters['management/getLones']
+          if(allLones && this.user){
+            if(this.user.role !='Admin'){
+              let userLone =allLones.filter(lone=>{
+                if(lone.requestedBy){
+                  return lone.requestedBy._id == this.user._id
+                }
+                
+              })
+              return userLone
+            }else return allLones
+          }
+        },
+        
         
       },
       methods: {

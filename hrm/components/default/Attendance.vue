@@ -1,17 +1,5 @@
 <template>
   <v-row>
-    <v-col
-      cols="12"
-      sm="6"
-    >
-      <v-date-picker
-        v-model="dates"
-        multiple
-        readonly
-        :selected-items-text="text"
-      ></v-date-picker>
-    </v-col>
-
 
     <v-col
       cols="12"
@@ -28,7 +16,7 @@
       >
         <template v-slot:activator="{ on, attrs }">
           <v-combobox
-            v-model="dates"
+            v-model="attendance"
             multiple
             chips
             small-chips
@@ -70,24 +58,39 @@
   export default {
     data: () => ({
       text:"2",
-      datess: ['2022-11-30', '2022-11-29'],
-      attendance:[
-        {day:'2022-11-30',act:{in:'time',out:'time'}}
-        
-      ],
+      dates: [],
+      
       menu: false,
       date:'30-11-2022',
     }),
    
     computed: {
-      dates(){
+      datess(){
         let d= this.$store.getters['management/dates'];
         if(d){
           let text = d.length +" days attended"
         this.text=text;
         }
         return d
-      }
+      },
+      user(){
+            return this.$store.getters['account/getUser']
+        },
+      attendance(){
+        let a= this.$store.getters['account/getAttendance']
+        if(a){
+          let myA= a.filter(at=>{
+            if(at.staffId._id == this.user._id){ 
+              //let day= new Date(at.clockIn)
+
+              this.dates.push(at.clockIn)
+            }
+            return at.staffId._id == this.user._id
+          })
+          console.log(myA)
+          return this.dates
+        }
+      },
     },
    
     methods: {

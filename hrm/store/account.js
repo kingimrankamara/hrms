@@ -151,7 +151,7 @@ export const   actions= {
             dispatch('settings/setLoading',{loading:false,message:''},{root:true});
         })
     },
-    getAttendance({dispatch, commit,state},payload){
+    getAttendance({dispatch, commit,state}){
         dispatch('settings/setLoading',{loading:true,message:'Loging In'},{root:true})
         let authtoken= state.authToken
         this.$axios.$get(`${baseUrl}/api/attendance/getAll`,

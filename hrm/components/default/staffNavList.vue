@@ -92,7 +92,7 @@
         action: 'mdi-money',
         items: [
           { title: 'Request Lone', to:'/lone/request' },
-          { title: 'Lones', to:'/lone/requests' },
+          { title: 'Lones', to:'/lone/lones' },
         ],
         title: 'Lone',
       },

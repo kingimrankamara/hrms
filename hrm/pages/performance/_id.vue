@@ -25,7 +25,7 @@
                                 <li>{{staff.firstName}} <span v-if="staff.middleName"> {{staff.middleName}}</span> {{staff.lastName}}</li>
                                 <li>{{staff.email}}</li>
                                 <li>{{staff.gender}}</li>
-                                <li>{{staff.department.name}}</li>
+                                <li v-if="staff.department">{{staff.department.name}}</li>
                             </ul>
                         </v-col>
 
