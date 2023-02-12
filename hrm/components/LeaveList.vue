@@ -75,10 +75,14 @@
         },
        
       leavesRequests(){
+        console.log("new")
         let l= this.$store.getters['management/getLeaves']
         let newleaves = l.slice()
         return newleaves.reverse();
-      }
+      },
+      redirect(){
+        return this.$store.getters['settings/getRedirect']
+      },
     },
     methods: {
       isOdd(num) { 
@@ -94,6 +98,13 @@
         newData.status="Denied"
         this.$store.dispatch('management/updateLeave',newData);
       }
+    },
+    watch: {
+        redirect(val){
+            if(val){
+                //this.leavesRequests()
+            }
+        }
     },
   }
 </script>

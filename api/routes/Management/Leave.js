@@ -81,7 +81,7 @@ router
 .post(allowCors.corsWithOptions, async (req, res) => {
   try {
     const uid = req.params.id
-    Leaves.findByIdAndUpdate(uid,req.body, function(err, resp){
+    Leaves.findByIdAndUpdate(uid,req.body,{ new: true }, function(err, resp){
       if(err){
         res.json(err.message);
       }

@@ -42,8 +42,9 @@ export const  mutations= {
                 return item._id== payload.data._id
             });
             let i =state[itemName].indexOf(item);
-            //state[itemName][i]=payload.data;
-            state[itemName][i]= Object.assign({}, payload.data)
+            state[itemName].splice(i, 1)
+            state[itemName].push(payload.data)
+            //state[itemName][i]= Object.assign({}, payload.data)
         },
         removeItem(state,payload){
             let items=payload.itemsName
@@ -73,7 +74,6 @@ export const  mutations= {
      };
      export const    actions= {  
         setAttendance({commit},payload){
-           
             commit("setAttendance",payload);
         },
         setSnackAlert({commit},payload){
@@ -258,7 +258,8 @@ export const  mutations= {
             .$post(`${baseUrl}/api/leave/update/${payload._id}`, payload)
             .then((res) => {
                 commit("updateItem",{data:res, itemsName:"leaves"});
-                dispatch('settings/setLoading',{loading:false,message:'Loging In'},{root:true})
+                dispatch('settings/setLoading',{loading:false,message:'Loging In'},{root:true});
+                dispatch('settings/setRedirect',true,{root:true});
             }).catch(err=>{
                 dispatch('settings/setLoading',{loading:false,message:'Requesting'},{root:true});
             })
