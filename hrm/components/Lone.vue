@@ -138,7 +138,7 @@
       </template>
       <template v-slot:item.actions="{ item }" >
         
-        
+        <div v-if="user.role =='Admin'">
         <v-icon
           small
           class="mr-2"
@@ -147,7 +147,7 @@
           v-if="user.role =='Admin'"
         >
           mdi-pencil
-        </v-icon>
+        </v-icon> 
         <v-icon
           small
           @click="deleteItem(item)"
@@ -155,6 +155,7 @@
         >
           mdi-delete
         </v-icon>
+        </div>
       </template>
      
     </v-data-table>
