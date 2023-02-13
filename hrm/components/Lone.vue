@@ -22,6 +22,7 @@
                 size="36px"
               >
                 <img
+                  v-if="item.requestedBy"
                   alt="Avatar"
                   :src='baseUrl+"/"+item.requestedBy.pp'
                 >

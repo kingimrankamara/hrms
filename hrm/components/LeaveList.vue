@@ -21,7 +21,7 @@
           <v-list-item
             :key="item._id"
           >
-            <v-list-item-avatar>
+            <v-list-item-avatar v-if="item.requestedBy">
               <v-img :src="baseUrl+'/'+item.requestedBy.pp"></v-img>
             </v-list-item-avatar>
   
