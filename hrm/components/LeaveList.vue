@@ -32,7 +32,7 @@
                
                 >
                 <v-expansion-panel-header>
-                   <div :class="{'error--text':item.status =='Denied', 'success--text':item.status =='Approved'}">
+                   <div v-if="item.requestedBy" :class="{'error--text':item.status =='Denied', 'success--text':item.status =='Approved'}">
                     <span>{{item.requestedBy.firstName}}</span> 
                     <span v-if="item.requestedBy.middleName">{{item.requestedBy.middleName}}</span>
                     <span>{{item.requestedBy.lastName}}</span> / {{item.leaveType}}
